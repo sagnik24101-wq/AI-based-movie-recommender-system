@@ -9,8 +9,7 @@ SIMILARITY_FILE_ID = '1-9LyvEEoyfG6sVveuA6Nb6Bnj2mK56HS'
 SIMILARITY_PATH = 'similarity.pkl'
 
 if not os.path.exists(SIMILARITY_PATH):
-    url = f'https://drive.google.com/uc?id={SIMILARITY_FILE_ID}'
-    gdown.download(url, SIMILARITY_PATH, quiet=False, fuzzy=True)
+    gdown.download(id=SIMILARITY_FILE_ID, output=SIMILARITY_PATH, quiet=False)
 
 movies = pickle.load(open('movies.pkl', 'rb'))
 similarity = pickle.load(open(SIMILARITY_PATH, 'rb'))
