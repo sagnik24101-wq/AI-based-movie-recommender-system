@@ -15,10 +15,24 @@ movies = pickle.load(open('movies.pkl', 'rb'))
 similarity = pickle.load(open(SIMILARITY_PATH, 'rb'))
 
 
+PLACEHOLDER_POSTER = "https://placehold.co/500x750/2B0A1F/D4AF37?text=No+Poster"
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY", "8265bd1679663a7ea12ac168da84d2e8")
+
+
 def fetch_poster(movie_id):
-    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US'.format(movie_id))
-    data = response.json()
-    return "https://image.tmdb.org/t/p/w500/" +  data['poster_path']
+    try:
+        response = requests.get(
+            'https://api.themoviedb.org/3/movie/{}?api_key={}&language=en-US'.format(movie_id, TMDB_API_KEY),
+            timeout=10,
+        )
+        data = response.json()
+        poster_path = data.get('poster_path')
+        if not poster_path:
+            return PLACEHOLDER_POSTER
+        return "https://image.tmdb.org/t/p/w500/" + poster_path
+    except Exception as e:
+        print(f"fetch_poster failed for movie_id={movie_id}: {e}")
+        return PLACEHOLDER_POSTER
 
 
 def recommend(movie):
@@ -90,7 +104,8 @@ st.markdown('</div>', unsafe_allow_html=True)
 # Results
 # ------------------------------------------------------------------
 if recommend_clicked:
-    names, posters = recommend(selected_movie_name)
+    with st.spinner("Fetching recommendations..."):
+        names, posters = recommend(selected_movie_name)
 
     st.markdown('<div class="results-heading">✦ Also Playing ✦</div>', unsafe_allow_html=True)
 
