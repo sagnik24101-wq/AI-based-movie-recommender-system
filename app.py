@@ -1,18 +1,25 @@
 import streamlit as st
 import pickle
 import requests
-movies = pickle.load(open('movies.pkl', 'rb'))
-similarity = pickle.load(open('similarity.pkl', 'rb'))
+import os
+import gdown
 
+# Download similarity.pkl from Google Drive if it's not already present locally
+SIMILARITY_FILE_ID = '1-9LyvEEoyfG6sVveuA6Nb6Bnj2mK56HS'
+SIMILARITY_PATH = 'similarity.pkl'
+
+if not os.path.exists(SIMILARITY_PATH):
+    url = f'https://drive.google.com/uc?id={SIMILARITY_FILE_ID}'
+    gdown.download(url, SIMILARITY_PATH, quiet=False, fuzzy=True)
+
+movies = pickle.load(open('movies.pkl', 'rb'))
+similarity = pickle.load(open(SIMILARITY_PATH, 'rb'))
 
 
 def fetch_poster(movie_id):
     response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US'.format(movie_id))
     data = response.json()
     return "https://image.tmdb.org/t/p/w500/" +  data['poster_path']
-
-
-
 
 
 def recommend(movie):
@@ -27,7 +34,6 @@ def recommend(movie):
 
     recommended_movies = []
     recommended_movies_posters = []
-
 
     for i in movies_list:
         movie_id = movies.iloc[i[0]].movie_id
