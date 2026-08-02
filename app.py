@@ -111,14 +111,14 @@ if recommend_clicked:
 
     cards_html = '<div class="film-grid">'
     for name, poster in zip(names, posters):
-        cards_html += f"""
-        <div class="film-card">
-            <div class="sprockets"></div>
-            <img src="{poster}" alt="{name}" />
-            <div class="sprockets"></div>
-            <div class="title-plate">{name}</div>
-        </div>
-        """
+        cards_html += (
+            '<div class="film-card">'
+            '<div class="sprockets"></div>'
+            f'<img src="{poster}" alt="{name}" />'
+            '<div class="sprockets"></div>'
+            f'<div class="title-plate">{name}</div>'
+            '</div>'
+        )
     cards_html += '</div>'
 
     st.markdown(cards_html, unsafe_allow_html=True)
