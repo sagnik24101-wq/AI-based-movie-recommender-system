@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600&display=swap');
+
+:root {
+    --velvet: #2B0A1F;
+    --velvet-deep: #1C0713;
+    --ink: #1A1410;
+    --gold: #D4AF37;
+    --gold-soft: #E8C766;
+    --cream: #F3E9D7;
+    --rose: #8C3B4A;
+}
+
+/* Hide default Streamlit chrome */
+#MainMenu, footer, header {visibility: hidden;}
+
+.stApp {
+    background:
+        radial-gradient(ellipse at top, #3a1128 0%, var(--velvet) 45%, var(--velvet-deep) 100%);
+    font-family: 'Work Sans', sans-serif;
+}
+
+.block-container {
+    padding-top: 2.5rem;
+    max-width: 1100px;
+}
+
+/* ---------- Marquee hero ---------- */
+.marquee-wrap {
+    text-align: center;
+    margin-bottom: 2.2rem;
+}
+
+.marquee-lights {
+    height: 10px;
+    background-image: radial-gradient(circle, var(--gold-soft) 38%, transparent 40%);
+    background-size: 22px 22px;
+    background-repeat: repeat-x;
+    background-position: center;
+    opacity: 0.85;
+    margin: 0 auto 0.6rem auto;
+    max-width: 640px;
+    animation: bulbFlicker 3.2s ease-in-out infinite;
+}
+
+@keyframes bulbFlicker {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 0.5; }
+}
+
+.marquee-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.4rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-shadow: 0 0 14px rgba(212,175,55,0.45), 0 2px 0 rgba(0,0,0,0.4);
+    margin: 0;
+    line-height: 1.05;
+}
+
+.marquee-subtitle {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-top: 0.35rem;
+}
+
+/* ---------- Ticket-style selector panel ---------- */
+.ticket-panel {
+    background: var(--cream);
+    border-radius: 10px;
+    border: 2px dashed var(--gold);
+    padding: 1.6rem 2rem 1.4rem 2rem;
+    position: relative;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+    margin-bottom: 2rem;
+}
+
+.ticket-panel::before, .ticket-panel::after {
+    content: "";
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    background: var(--velvet-deep);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 0 2px var(--gold);
+}
+.ticket-panel::before { left: -14px; }
+.ticket-panel::after { right: -14px; }
+
+.ticket-label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.08em;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+}
+
+/* Streamlit selectbox restyle */
+div[data-baseweb="select"] > div {
+    background-color: #fff !important;
+    border: 1.5px solid var(--ink) !important;
+    border-radius: 6px !important;
+    font-family: 'Work Sans', sans-serif;
+}
+
+/* Recommend button */
+.stButton > button {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.08em;
+    font-size: 1.15rem;
+    background: linear-gradient(180deg, var(--gold-soft), var(--gold) 60%, #a9812a);
+    color: var(--velvet-deep);
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 2.4rem;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-top: 0.6rem;
+}
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(212,175,55,0.35);
+    color: var(--velvet-deep);
+}
+.stButton > button:active {
+    transform: translateY(0px);
+}
+
+/* ---------- Results header ---------- */
+.results-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    color: var(--gold-soft);
+    font-size: 1.3rem;
+    margin: 2.2rem 0 1rem 0;
+    text-align: center;
+}
+
+/* ---------- Film ticket-stub cards ---------- */
+.film-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.1rem;
+}
+@media (max-width: 900px) {
+    .film-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.film-card {
+    background: var(--cream);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(14px);
+    animation: cardRise 0.55s ease forwards;
+}
+.film-card:nth-child(1) { animation-delay: 0.05s; }
+.film-card:nth-child(2) { animation-delay: 0.15s; }
+.film-card:nth-child(3) { animation-delay: 0.25s; }
+.film-card:nth-child(4) { animation-delay: 0.35s; }
+.film-card:nth-child(5) { animation-delay: 0.45s; }
+
+@keyframes cardRise {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.film-card .sprockets {
+    height: 12px;
+    background-image: radial-gradient(circle, var(--velvet-deep) 38%, transparent 40%);
+    background-size: 13px 13px;
+    background-repeat: repeat-x;
+    background-position: 5px center;
+}
+
+.film-card img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+}
+
+.film-card .title-plate {
+    padding: 0.65rem 0.55rem 0.8rem 0.55rem;
+    border-top: 2px dashed var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.02em;
+    font-size: 0.98rem;
+    line-height: 1.15;
+    color: var(--ink);
+    text-align: center;
+}

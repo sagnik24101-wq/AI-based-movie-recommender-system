@@ -41,31 +41,69 @@ def recommend(movie):
         # fetch poster from api
         recommended_movies_posters.append(fetch_poster(movie_id))
 
-    return recommended_movies,recommended_movies_posters
+    return recommended_movies, recommended_movies_posters
 
-st.title("Movie Recommender System")
 
-selected_movie_name = st.selectbox(
-    "Select a movie",
-    movies['title'].values
+# ------------------------------------------------------------------
+# Page config
+# ------------------------------------------------------------------
+st.set_page_config(
+    page_title="Now Showing — Movie Recommender",
+    page_icon="🎟️",
+    layout="wide",
 )
 
-if st.button("Recommend"):
-    names,posters = recommend(selected_movie_name)
+# ------------------------------------------------------------------
+# Cinema marquee theme — load CSS from external style.css
+# ------------------------------------------------------------------
+def load_css(file_path):
+    with open(file_path) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-    col1,col2,col3,col4,col5 = st.columns(5)
-    with col1:
-        st.text(names[0])
-        st.image(posters[0])
-    with col2:
-        st.text(names[1])
-        st.image(posters[1])
-    with col3:
-        st.text(names[2])
-        st.image(posters[2])
-    with col4:
-        st.text(names[3])
-        st.image(posters[3])
-    with col5:
-        st.text(names[4])
-        st.image(posters[4])
+load_css("style.css")
+
+# ------------------------------------------------------------------
+# Hero / marquee
+# ------------------------------------------------------------------
+st.markdown("""
+<div class="marquee-wrap">
+    <div class="marquee-lights"></div>
+    <div class="marquee-title">NOW SHOWING</div>
+    <div class="marquee-subtitle">Pick a film. We'll find what's playing next.</div>
+</div>
+""", unsafe_allow_html=True)
+
+# ------------------------------------------------------------------
+# Selector panel (ticket style)
+# ------------------------------------------------------------------
+st.markdown('<div class="ticket-panel">', unsafe_allow_html=True)
+st.markdown('<div class="ticket-label">SELECT YOUR FEATURE</div>', unsafe_allow_html=True)
+selected_movie_name = st.selectbox(
+    "",
+    movies['title'].values,
+    label_visibility="collapsed",
+)
+recommend_clicked = st.button("Recommend")
+st.markdown('</div>', unsafe_allow_html=True)
+
+# ------------------------------------------------------------------
+# Results
+# ------------------------------------------------------------------
+if recommend_clicked:
+    names, posters = recommend(selected_movie_name)
+
+    st.markdown('<div class="results-heading">✦ Also Playing ✦</div>', unsafe_allow_html=True)
+
+    cards_html = '<div class="film-grid">'
+    for name, poster in zip(names, posters):
+        cards_html += f"""
+        <div class="film-card">
+            <div class="sprockets"></div>
+            <img src="{poster}" alt="{name}" />
+            <div class="sprockets"></div>
+            <div class="title-plate">{name}</div>
+        </div>
+        """
+    cards_html += '</div>'
+
+    st.markdown(cards_html, unsafe_allow_html=True)
