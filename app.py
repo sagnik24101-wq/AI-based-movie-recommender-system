@@ -3,6 +3,7 @@ import pickle
 import requests
 import os
 import gdown
+from concurrent.futures import ThreadPoolExecutor
 
 # Download similarity.pkl from Google Drive if it's not already present locally
 SIMILARITY_FILE_ID = '1-9LyvEEoyfG6sVveuA6Nb6Bnj2mK56HS'
@@ -45,15 +46,12 @@ def recommend(movie):
         reverse=True
     )[1:6]
 
-    recommended_movies = []
-    recommended_movies_posters = []
+    recommended_movies = [movies.iloc[i[0]].title for i in movies_list]
+    movie_ids = [movies.iloc[i[0]].movie_id for i in movies_list]
 
-    for i in movies_list:
-        movie_id = movies.iloc[i[0]].movie_id
-
-        recommended_movies.append(movies.iloc[i[0]].title)
-        # fetch poster from api
-        recommended_movies_posters.append(fetch_poster(movie_id))
+    # fetch all posters in parallel instead of one-by-one
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        recommended_movies_posters = list(executor.map(fetch_poster, movie_ids))
 
     return recommended_movies, recommended_movies_posters
 
@@ -93,7 +91,7 @@ st.markdown("""
 st.markdown('<div class="ticket-panel">', unsafe_allow_html=True)
 st.markdown('<div class="ticket-label">SELECT YOUR FEATURE</div>', unsafe_allow_html=True)
 selected_movie_name = st.selectbox(
-    "",
+    "Select a movie",
     movies['title'].values,
     label_visibility="collapsed",
 )
